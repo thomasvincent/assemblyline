@@ -1,6 +1,6 @@
 **WIP**
 
-**Inspired by the AssemblyLine release pipeline library, but written for Gradle**
+**A fork of the Fabric8 release pipeline library, with the goal of going to Gradle**
 
 **Assembly Line Pipeline Library for continous integration and delivery**
 

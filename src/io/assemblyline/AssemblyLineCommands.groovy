@@ -6,8 +6,8 @@ import groovy.json.JsonSlurper
 import io.assemblyline.kubernetes.api.KubernetesHelper
 import io.assemblyline.kubernetes.client.DefaultKubernetesClient
 import io.assemblyline.kubernetes.client.KubernetesClient
-import io.assemblyline.openshift.client.DefaultOpenShiftClient
-import io.assemblyline.openshift.client.OpenShiftClient
+import com.openshift.restclient.api.DefaultOpenShiftClient
+import com.openshift.restclient.api.OpenShiftClient
 import jenkins.model.Jenkins
 
 import java.util.regex.Pattern
