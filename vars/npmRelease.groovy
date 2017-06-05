@@ -6,8 +6,8 @@ def call(body) {
     body.delegate = config
     body()
 
-    def gitEmail = config.gitEmail ?: 'fabric8-admin@googlegroups.com'
-    def gitUserName = config.gitUserName ?: 'fabric8-release'
+    def gitEmail = config.gitEmail ?: 'assemblyline-admin@googlegroups.com'
+    def gitUserName = config.gitUserName ?: 'assemblyline-release'
     def branch = config.branch
 
     sh "git config user.email ${gitEmail}"

@@ -1,14 +1,14 @@
 #!/usr/bin/groovy
-import io.fabric8.Fabric8Commands
+import io.assemblyline.AssemblyLineCommands
 
 def call(Map parameters = [:], body) {
-    def flow = new Fabric8Commands()
+    def flow = new AssemblyLineCommands()
 
     def defaultLabel = buildId('maven')
     def label = parameters.get('label', defaultLabel)
 
-    def mavenImage = parameters.get('mavenImage', 'fabric8/maven-builder:2.2.297')
-    def jnlpImage = (flow.isOpenShift()) ? 'fabric8/jenkins-slave-base-centos7:0.0.1' : 'jenkinsci/jnlp-slave:2.62'
+    def mavenImage = parameters.get('mavenImage', 'assemblyline/maven-builder:2.2.297')
+    def jnlpImage = (flow.isOpenShift()) ? 'assemblyline/jenkins-slave-base-centos7:0.0.1' : 'jenkinsci/jnlp-slave:2.62'
     def inheritFrom = parameters.get('inheritFrom', 'base')
 
     def cloud = flow.getCloudConfig()
@@ -33,7 +33,7 @@ def call(Map parameters = [:], body) {
                           secretVolume(secretName: 'jenkins-hub-api-token', mountPath: '/home/jenkins/.apitoken'),
                           secretVolume(secretName: 'jenkins-ssh-config', mountPath: '/root/.ssh'),
                           secretVolume(secretName: 'jenkins-git-ssh', mountPath: '/root/.ssh-git')],
-                envVars: [[key: 'GIT_COMMITTER_EMAIL', value: 'fabric8@googlegroups.com'], [key: 'GIT_COMMITTER_NAME', value: 'fabric8']]) {
+                envVars: [[key: 'GIT_COMMITTER_EMAIL', value: 'assemblyline@googlegroups.com'], [key: 'GIT_COMMITTER_NAME', value: 'assemblyline']]) {
 
             body(
 

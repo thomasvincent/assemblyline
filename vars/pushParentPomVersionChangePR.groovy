@@ -10,7 +10,7 @@ def call(body) {
     body.delegate = config
     body()
 
-    def flow = new io.fabric8.Fabric8Commands()
+    def flow = new io.assemblyline.AssemblyLineCommands()
     def pomLocation = config.parentPomLocation ?: 'pom.xml'
     def containerName = config.containerName ?: 'clients'
     def id
@@ -43,8 +43,8 @@ def call(body) {
           sh 'chmod 600 /root/.ssh-git/ssh-key.pub'
           sh 'chmod 700 /root/.ssh-git'
 
-          sh "git config --global user.email fabric8-admin@googlegroups.com"
-          sh "git config --global user.name fabric8-release"
+          sh "git config --global user.email assemblyline-admin@googlegroups.com"
+          sh "git config --global user.name assemblyline-release"
 
           def message = "Update parent pom version ${config.version}"
           sh "cd ${repo} && git add ${pomLocation}"

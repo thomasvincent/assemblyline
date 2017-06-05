@@ -8,13 +8,13 @@ def call(body) {
 
 
   for(int i = 0; i < stagedProjects.size(); i++){
-    // currently system tests only exist fot fabric8-devops
-    if (stagedProjects[i].name == 'fabric8-devops'){
+    // currently system tests only exist fot assemblyline-devops
+    if (stagedProjects[i].name == 'assemblyline-devops'){
       node ('kubernetes'){
         ws (stagedProjects[i].name){
           withEnv(["PATH+MAVEN=${tool 'maven-3.3.1'}/bin"]) {
 
-            def flow = new io.fabric8.Fabric8Commands()
+            def flow = new io.assemblyline.AssemblyLineCommands()
             flow.setupWorkspace(stagedProjects[i].name)
 
             def releaseVersion = stagedProjects[i].version

@@ -6,7 +6,7 @@ def call(body) {
   body.delegate = config
   body()
 
-  def flow = new io.fabric8.Fabric8Commands()
+  def flow = new io.assemblyline.AssemblyLineCommands()
   def repoId
   def releaseVersion
   def extraStageImages = config.extraImagesToStage ?: []

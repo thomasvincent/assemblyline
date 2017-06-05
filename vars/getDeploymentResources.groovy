@@ -1,6 +1,6 @@
 #!/usr/bin/groovy
-import io.fabric8.Utils
-import io.fabric8.Fabric8Commands
+import io.assemblyline.Utils
+import io.assemblyline.AssemblyLineCommands
 
 def call(body) {
     // evaluate the body block, and collect configuration into the object
@@ -9,7 +9,7 @@ def call(body) {
     body.delegate = config
     body()
 
-    def flow = new Fabric8Commands()
+    def flow = new AssemblyLineCommands()
     def utils = new Utils()
 
     def expose = config.exposeApp ?: 'true'
@@ -24,9 +24,9 @@ def call(body) {
         isSha = utils.getImageStreamSha(env.JOB_NAME)
     }
 
-    def fabric8Registry = ''
+    def assemblylineRegistry = ''
     if (env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST){
-        fabric8Registry = env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST+':'+env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT+'/'
+        assemblylineRegistry = env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST+':'+env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT+'/'
     }
 
     def sha
@@ -42,9 +42,9 @@ def service = """
   kind: Service
   metadata:
     annotations:
-      fabric8.io/iconUrl: ${config.icon}
+      assemblyline.io/iconUrl: ${config.icon}
     labels:
-      provider: fabric8
+      provider: assemblyline
       project: ${env.JOB_NAME}
       expose: '${expose}'
       version: ${config.version}
@@ -57,7 +57,7 @@ def service = """
       targetPort: ${config.port}
     selector:
       project: ${env.JOB_NAME}
-      provider: fabric8
+      provider: assemblyline
       group: quickstart
 """
 
@@ -66,9 +66,9 @@ def deployment = """
   kind: Deployment
   metadata:
     annotations:
-      fabric8.io/iconUrl: ${config.icon}
+      assemblyline.io/iconUrl: ${config.icon}
     labels:
-      provider: fabric8
+      provider: assemblyline
       project: ${env.JOB_NAME}
       version: ${config.version}
       group: quickstart
@@ -77,13 +77,13 @@ def deployment = """
     replicas: 1
     selector:
       matchLabels:
-        provider: fabric8
+        provider: assemblyline
         project: ${env.JOB_NAME}
         group: quickstart
     template:
       metadata:
         labels:
-          provider: fabric8
+          provider: assemblyline
           project: ${env.JOB_NAME}
           version: ${config.version}
           group: quickstart
@@ -94,7 +94,7 @@ def deployment = """
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          image: ${fabric8Registry}${env.KUBERNETES_NAMESPACE}/${env.JOB_NAME}:${config.version}
+          image: ${assemblylineRegistry}${env.KUBERNETES_NAMESPACE}/${env.JOB_NAME}:${config.version}
           imagePullPolicy: IfNotPresent
           name: ${env.JOB_NAME}
           ports:
@@ -129,9 +129,9 @@ def deploymentConfig = """
   kind: DeploymentConfig
   metadata:
     annotations:
-      fabric8.io/iconUrl: ${config.icon}
+      assemblyline.io/iconUrl: ${config.icon}
     labels:
-      provider: fabric8
+      provider: assemblyline
       project: ${env.JOB_NAME}
       version: ${config.version}
       group: quickstart
@@ -139,13 +139,13 @@ def deploymentConfig = """
   spec:
     replicas: 1
     selector:
-      provider: fabric8
+      provider: assemblyline
       project: ${env.JOB_NAME}
       group: quickstart
     template:
       metadata:
         labels:
-          provider: fabric8
+          provider: assemblyline
           project: ${env.JOB_NAME}
           version: ${config.version}
           group: quickstart

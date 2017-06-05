@@ -1,10 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'io.fabric8.cd'
+group = 'io.assemblyline.cd'
 version = '2.2-SNAPSHOT'
 
-description = """Fabric8 Pipeline Library"""
+description = """AssemblyLine Pipeline Library"""
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
@@ -23,11 +23,11 @@ repositories {
      maven { url "http://repo.maven.apache.org/maven2" }
 }
 dependencies {
-    compile group: 'io.fabric8', name: 'kubernetes-client', version:'2.2.13'
-    compile group: 'io.fabric8', name: 'openshift-client', version:'2.2.13'
-    compile group: 'io.fabric8', name: 'kubernetes-api', version:'2.2.209'
+    compile group: 'io.assemblyline', name: 'kubernetes-client', version:'2.2.13'
+    compile group: 'io.assemblyline', name: 'openshift-client', version:'2.2.13'
+    compile group: 'io.assemblyline', name: 'kubernetes-api', version:'2.2.209'
     compile group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-job', version:'2.10'
-    compile group: 'io.fabric8.jenkins.plugins', name: 'openshift-sync', version:'0.1.12'
+    compile group: 'io.assemblyline.jenkins.plugins', name: 'openshift-sync', version:'0.1.12'
     compile group: 'org.codehaus.groovy', name: 'groovy', version:'1.8.9'
     compile group: 'org.codehaus.groovy', name: 'groovy-json', version:'2.4.3'
     compile group: 'org.jenkins-ci.main', name: 'jenkins-core', version:'2.47'

@@ -1,12 +1,12 @@
 #!/usr/bin/groovy
-package io.fabric8
+package io.assemblyline
 
 import com.cloudbees.groovy.cps.NonCPS
-import io.fabric8.kubernetes.client.DefaultKubernetesClient
-import io.fabric8.kubernetes.client.KubernetesClient
-import io.fabric8.openshift.client.DefaultOpenShiftClient
-import io.fabric8.openshift.client.OpenShiftClient
-import io.fabric8.Fabric8Commands
+import io.assemblyline.kubernetes.client.DefaultKubernetesClient
+import io.assemblyline.kubernetes.client.KubernetesClient
+import io.assemblyline.openshift.client.DefaultOpenShiftClient
+import io.assemblyline.openshift.client.OpenShiftClient
+import io.assemblyline.AssemblyLineCommands
 import jenkins.model.Jenkins
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
@@ -34,7 +34,7 @@ def getImageStreamSha(imageStreamName) {
 }
 
 // returns the tag sha from an imagestream
-// original code came from the fabric8-maven-plugin
+// original code came from the assemblyline-maven-plugin
 @NonCPS
 def findTagSha(OpenShiftClient client, String imageStreamName, String namespace) {
   def currentImageStream = null
@@ -86,7 +86,7 @@ def findTagSha(OpenShiftClient client, String imageStreamName, String namespace)
 
 @NonCPS
 def addAnnotationToBuild(annotation, value) {
-  def flow = new Fabric8Commands()
+  def flow = new AssemblyLineCommands()
   if (flow.isOpenShift()) {
     def buildName = getValidOpenShiftBuildName()
     echo "Adding annotation '${annotation}: ${value}' to Build ${buildName}"
@@ -156,7 +156,7 @@ def isCD(){
 }
 
 def addPipelineAnnotationToBuild(t){
-    addAnnotationToBuild('fabric8.io/pipeline.type', t)
+    addAnnotationToBuild('assemblyline.io/pipeline.type', t)
 }
 
 def getLatestVersionFromTag(){
@@ -183,7 +183,7 @@ def getBranch(){
 
 @NonCPS
 def isValidBuildName(buildName){
-  def flow = new Fabric8Commands()
+  def flow = new AssemblyLineCommands()
   if (flow.isOpenShift()) {
     echo "Looking for matching Build ${buildName}"
     OpenShiftClient oClient = new DefaultOpenShiftClient()
@@ -229,7 +229,7 @@ def getExistingPR(project, pair){
     def property = pair[0]
     def version = pair[1]
 
-    def flow = new Fabric8Commands()
+    def flow = new AssemblyLineCommands()
     def githubToken = flow.getGitHubToken()
     def apiUrl = new URL("https://api.github.com/repos/${project}/pulls")
     def rs = restGetURL{
@@ -255,7 +255,7 @@ def getExistingPR(project, pair){
 def getOpenPRs(project){
 
   def openPRs = []
-  def flow = new Fabric8Commands()
+  def flow = new AssemblyLineCommands()
   def githubToken = flow.getGitHubToken()
   def apiUrl = new URL("https://api.github.com/repos/${project}/pulls")
   def rs = restGetURL{
@@ -276,12 +276,12 @@ def getOpenPRs(project){
   return openPRs
 }
 
-def getDownstreamProjectOverrides(project, id, downstreamProject, botName = '@fabric8cd'){
+def getDownstreamProjectOverrides(project, id, downstreamProject, botName = '@assemblylinecd'){
 
   if (!downstreamProject){
     error 'no downstreamProjects provided'
   }
-  def flow = new Fabric8Commands()
+  def flow = new AssemblyLineCommands()
   def comments = flow.getIssueComments(project, id)
   // start by looking at the most recent commments and work back
   Collections.reverse(comments)
@@ -311,9 +311,9 @@ def getDownstreamProjectOverrides(project, id, downstreamProject, botName = '@fa
   }
 }
 
-def getDownstreamProjectOverrides(downstreamProject, botName = '@fabric8cd'){
+def getDownstreamProjectOverrides(downstreamProject, botName = '@assemblylinecd'){
 
-  def flow = new Fabric8Commands()
+  def flow = new AssemblyLineCommands()
 
   def id = env.CHANGE_ID
   if (!id){
@@ -322,17 +322,17 @@ def getDownstreamProjectOverrides(downstreamProject, botName = '@fabric8cd'){
 
   def project = getRepoName()
 
-  return getDownstreamProjectOverrides(project, id, downstreamProject, botName = '@fabric8cd')
+  return getDownstreamProjectOverrides(project, id, downstreamProject, botName = '@assemblylinecd')
 }
 
 
-def isSkipCIDeploy(botName = '@fabric8cd'){
+def isSkipCIDeploy(botName = '@assemblylinecd'){
   def id = env.CHANGE_ID
   if (!id){
     error 'no env.CHANGE_ID / pull request id found'
   }
 
-  def flow = new Fabric8Commands()
+  def flow = new AssemblyLineCommands()
   def project = getRepoName()
 
   def comments = flow.getIssueComments(project, id)
@@ -375,9 +375,9 @@ def getOpenShiftBuildName(){
   def activeInstance = Jenkins.getActiveInstance()
   def  job = (WorkflowJob) activeInstance.getItemByFullName(env.JOB_NAME)
   def run = job.getBuildByNumber(Integer.parseInt(env.BUILD_NUMBER))
-  def flow = new Fabric8Commands()
+  def flow = new AssemblyLineCommands()
   if (flow.isOpenShift()){
-    def clazz = Thread.currentThread().getContextClassLoader().loadClass("io.fabric8.jenkins.openshiftsync.BuildCause")
+    def clazz = Thread.currentThread().getContextClassLoader().loadClass("io.assemblyline.jenkins.openshiftsync.BuildCause")
     def cause = run.getCause(clazz)
     if (cause != null) {
       return cause.name

@@ -6,7 +6,7 @@ def call(body) {
   body.delegate = config
   body()
 
-  def flow = new io.fabric8.Fabric8Commands()
+  def flow = new io.assemblyline.AssemblyLineCommands()
   echo "adding merge comment to pr ${config.pullRequestId} for project ${config.project}"
   flow.addMergeCommentToPullRequest(config.pullRequestId, config.project)
   waitUntilPullRequestMerged{

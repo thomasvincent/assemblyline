@@ -24,14 +24,14 @@
     <version>9</version>
   </parent>
 
-  <groupId>io.fabric8.cd</groupId>
-  <artifactId>fabric8-pipeline-library</artifactId>
+  <groupId>io.assemblyline.cd</groupId>
+  <artifactId>assemblyline-pipeline-library</artifactId>
   <version>2.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Fabric8 Pipeline Library</name>
+  <name>AssemblyLine Pipeline Library</name>
 
-  <url>http://fabric8.io/</url>
+  <url>http://assemblyline.io/</url>
   <inceptionYear>2016</inceptionYear>
 
   <organization>
@@ -55,17 +55,17 @@
   <developers>
     <developer>
       <id>geeks</id>
-      <name>Fabric8 Development Team</name>
-      <email>fabric8@googlegroups.com</email>
-      <organization>fabric8</organization>
-      <organizationUrl>http://fabric8.io/</organizationUrl>
+      <name>AssemblyLine Development Team</name>
+      <email>assemblyline@googlegroups.com</email>
+      <organization>assemblyline</organization>
+      <organizationUrl>http://assemblyline.io/</organizationUrl>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:fabric8io/fabric8-pipeline-library.git</connection>
-    <developerConnection>scm:git:git@github.com:fabric8io/fabric8-pipeline-library.git</developerConnection>
-    <url>http://github.com/fabric8io/fabric8-pipeline-library</url>
+    <connection>scm:git:git@github.com:assemblylineio/assemblyline-pipeline-library.git</connection>
+    <developerConnection>scm:git:git@github.com:assemblylineio/assemblyline-pipeline-library.git</developerConnection>
+    <url>http://github.com/assemblylineio/assemblyline-pipeline-library</url>
     <tag>app-console-2.0.1</tag>
   </scm>
 
@@ -73,9 +73,9 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
 
-    <fabric8.devops.version>2.2.331</fabric8.devops.version>
-    <fabric8.version>2.2.209</fabric8.version>
-    <fabric8.maven.plugin.version>3.1.66</fabric8.maven.plugin.version>
+    <assemblyline.devops.version>2.2.331</assemblyline.devops.version>
+    <assemblyline.version>2.2.209</assemblyline.version>
+    <assemblyline.maven.plugin.version>3.1.66</assemblyline.maven.plugin.version>
     <workflow-job.verion>2.10</workflow-job.verion>
     <openshift-sync.version>0.1.12</openshift-sync.version>
     <gmavenVersion>1.4</gmavenVersion>
@@ -198,9 +198,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>fabric8-project</artifactId>
-        <version>${fabric8.version}</version>
+        <groupId>io.assemblyline</groupId>
+        <artifactId>assemblyline-project</artifactId>
+        <version>${assemblyline.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -210,7 +210,7 @@
         <version>${workflow-job.verion}</version>
       </dependency>
       <dependency>
-        <groupId>io.fabric8.jenkins.plugins</groupId>
+        <groupId>io.assemblyline.jenkins.plugins</groupId>
         <artifactId>openshift-sync</artifactId>
         <version>${openshift-sync.version}</version>
       </dependency>
@@ -219,15 +219,15 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.fabric8</groupId>
+      <groupId>io.assemblyline</groupId>
       <artifactId>kubernetes-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.fabric8</groupId>
+      <groupId>io.assemblyline</groupId>
       <artifactId>openshift-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.fabric8</groupId>
+      <groupId>io.assemblyline</groupId>
       <artifactId>kubernetes-api</artifactId>
     </dependency>
     <dependency>
@@ -235,7 +235,7 @@
       <artifactId>workflow-job</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.fabric8.jenkins.plugins</groupId>
+      <groupId>io.assemblyline.jenkins.plugins</groupId>
       <artifactId>openshift-sync</artifactId>
     </dependency>
     <!-- I think this is the version jenkins piplines uses? -->

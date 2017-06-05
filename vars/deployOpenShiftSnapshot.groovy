@@ -13,10 +13,10 @@ def call(body) {
     def originalImageName = config.originalImageName
     def newImageName = config.newImageName
     def deploymentName = config.githubRepo
-    def providerLabel = config.providerLabel ?: 'fabric8'
+    def providerLabel = config.providerLabel ?: 'assemblyline'
 
-    def flow = new io.fabric8.Fabric8Commands()
-    def utils = new io.fabric8.Utils()
+    def flow = new io.assemblyline.AssemblyLineCommands()
+    def utils = new io.assemblyline.Utils()
 
     openShiftProject = openShiftProject + '-' + utils.getRepoName()
 
@@ -40,7 +40,7 @@ def call(body) {
             sh "oc new-project ${openShiftProject}"
         }
 
-        // TODO share this code with buildSnapshotFabric8UI.groovy!
+        // TODO share this code with buildSnapshotAssemblyLineUI.groovy!
         sh '''
             export FABRIC8_WIT_API_URL="https://api.openshift.io/api/"
             export FABRIC8_RECOMMENDER_API_URL="https://recommender.api.openshift.io"
@@ -76,14 +76,14 @@ def call(body) {
     /*
         sh '''
             export FABRIC8_WIT_API_URL="https://api.prod-preview.openshift.io/api/"
-            export FABRIC8_RECOMMENDER_API_URL="https://api-bayesian.dev.rdu2c.fabric8.io/api/v1/"
+            export FABRIC8_RECOMMENDER_API_URL="https://api-bayesian.dev.rdu2c.assemblyline.io/api/v1/"
             export FABRIC8_FORGE_API_URL="https://forge.api.prod-preview.openshift.io"
             export FABRIC8_SSO_API_URL="https://sso.prod-preview.openshift.io/"
 
             export OPENSHIFT_CONSOLE_URL="https://console.free-int.openshift.com/console/"
             export WS_K8S_API_SERVER="api.free-int.openshift.com:443"
 
-            cd fabric8-ui && npm run build:prod
+            cd assemblyline-ui && npm run build:prod
             '''
     */
 

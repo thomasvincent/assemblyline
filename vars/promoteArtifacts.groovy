@@ -17,7 +17,7 @@ def call(body) {
       sh 'chmod 700 /root/.ssh-git'
 
       echo "About to release ${name} repo ids ${repoIds}"
-      def flow = new io.fabric8.Fabric8Commands()
+      def flow = new io.assemblyline.AssemblyLineCommands()
       for(int j = 0; j < repoIds.size(); j++){
         flow.releaseSonartypeRepo(repoIds[j])
       }

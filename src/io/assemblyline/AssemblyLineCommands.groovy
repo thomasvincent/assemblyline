@@ -1,13 +1,13 @@
 #!/usr/bin/groovy
-package io.fabric8
+package io.assemblyline
 
 import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonSlurper
-import io.fabric8.kubernetes.api.KubernetesHelper
-import io.fabric8.kubernetes.client.DefaultKubernetesClient
-import io.fabric8.kubernetes.client.KubernetesClient
-import io.fabric8.openshift.client.DefaultOpenShiftClient
-import io.fabric8.openshift.client.OpenShiftClient
+import io.assemblyline.kubernetes.api.KubernetesHelper
+import io.assemblyline.kubernetes.client.DefaultKubernetesClient
+import io.assemblyline.kubernetes.client.KubernetesClient
+import io.assemblyline.openshift.client.DefaultOpenShiftClient
+import io.assemblyline.openshift.client.OpenShiftClient
 import jenkins.model.Jenkins
 
 import java.util.regex.Pattern
@@ -107,25 +107,25 @@ def getDockerHubImageTags(String image) {
 }
 
 def searchAndReplaceMavenVersionPropertyNoCommit(String property, String newVersion) {
-    // example matches <fabric8.version>2.3</fabric8.version> <fabric8.version>2.3.12</fabric8.version> <fabric8.version>2.3.12.5</fabric8.version>
+    // example matches <assemblyline.version>2.3</assemblyline.version> <assemblyline.version>2.3.12</assemblyline.version> <assemblyline.version>2.3.12.5</assemblyline.version>
     sh "find -type f -name 'pom.xml' | xargs sed -i -r 's/${property}[0-9][0-9]{0,2}.[0-9][0-9]{0,2}(.[0-9][0-9]{0,2})?(.[0-9][0-9]{0,2})?</${property}${newVersion}</g'"
 }
 
 def searchAndReplaceMavenVersionProperty(String property, String newVersion) {
-    // example matches <fabric8.version>2.3</fabric8.version> <fabric8.version>2.3.12</fabric8.version> <fabric8.version>2.3.12.5</fabric8.version>
+    // example matches <assemblyline.version>2.3</assemblyline.version> <assemblyline.version>2.3.12</assemblyline.version> <assemblyline.version>2.3.12.5</assemblyline.version>
     sh "find -type f -name 'pom.xml' | xargs sed -i -r 's/${property}[0-9][0-9]{0,2}.[0-9][0-9]{0,2}(.[0-9][0-9]{0,2})?(.[0-9][0-9]{0,2})?</${property}${newVersion}</g'"
     sh "git commit -a -m 'Bump ${property} version'"
 }
 
 def searchAndReplaceMavenSnapshotProfileVersionProperty(String property, String newVersion) {
-    // example matches <fabric8.version>2.3-SNAPSHOT</fabric8.version> <fabric8.version>2.3.12-SNAPSHOT</fabric8.version> <fabric8.version>2.3.12.5-SNAPSHOT</fabric8.version>
+    // example matches <assemblyline.version>2.3-SNAPSHOT</assemblyline.version> <assemblyline.version>2.3.12-SNAPSHOT</assemblyline.version> <assemblyline.version>2.3.12.5-SNAPSHOT</assemblyline.version>
     sh "find -type f -name 'pom.xml' | xargs sed -i -r 's/${property}[0-9][0-9]{0,2}.[0-9][0-9]{0,2}(.[0-9][0-9]{0,2})?(.[0-9][0-9]{0,2})?-SNAPSHOT</${property}${newVersion}-SNAPSHOT</g'"
     sh "git commit -a -m 'Bump ${property} development profile SNAPSHOT version'"
 }
 
 def setupWorkspaceForRelease(String project, Boolean useGitTagForNextVersion, String mvnExtraArgs = "", String currentVersion = "") {
-    sh "git config user.email fabric8-admin@googlegroups.com"
-    sh "git config user.name fabric8-release"
+    sh "git config user.email assemblyline-admin@googlegroups.com"
+    sh "git config user.name assemblyline-release"
 
     sh "git tag -d \$(git tag)"
     sh "git fetch --tags"
@@ -264,10 +264,10 @@ def dropStagingRepo(String repoId) {
 }
 
 def helm() {
-    def pluginVersion = getReleaseVersion("io/fabric8/fabric8-maven-plugin")
+    def pluginVersion = getReleaseVersion("io/assemblyline/assemblyline-maven-plugin")
     try {
-        sh "mvn io.fabric8:fabric8-maven-plugin:${pluginVersion}:helm"
-        sh "mvn io.fabric8:fabric8-maven-plugin:${pluginVersion}:helm-push"
+        sh "mvn io.assemblyline:assemblyline-maven-plugin:${pluginVersion}:helm"
+        sh "mvn io.assemblyline:assemblyline-maven-plugin:${pluginVersion}:helm-push"
     } catch (err) {
         error "ERROR with helm push ${err}"
     }

@@ -40,7 +40,7 @@ def call(body) {
                 def imageName = "docker.io/${dockerOrg}/${prj}"
 
                 stage ('build image'){
-                    // temporarily disable building docker image until Makefile changes merged in gofabric8
+                    // temporarily disable building docker image until Makefile changes merged in goassemblyline
                     //sh "docker build -t ${imageName}:latest ."
                 }
             }

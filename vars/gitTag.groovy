@@ -11,8 +11,8 @@ def call(body) {
     sh 'chmod 600 /root/.ssh-git/ssh-key.pub'
     sh 'chmod 700 /root/.ssh-git'
 
-    sh "git config user.email fabric8-admin@googlegroups.com"
-    sh "git config user.name fabric8"
+    sh "git config user.email assemblyline-admin@googlegroups.com"
+    sh "git config user.name assemblyline"
 
     if (skipVersionPrefix){
         sh "git tag -fa ${config.releaseVersion} -m 'Release version ${config.releaseVersion}'"

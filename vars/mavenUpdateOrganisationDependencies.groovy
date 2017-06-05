@@ -4,7 +4,7 @@ import groovy.json.JsonSlurper
 import groovy.xml.DOMBuilder
 import groovy.xml.XmlUtil
 import groovy.xml.dom.DOMCategory
-import io.fabric8.Fabric8Commands
+import io.assemblyline.AssemblyLineCommands
 import org.w3c.dom.Element
 
 def call(body) {
@@ -19,7 +19,7 @@ def call(body) {
     def pomLocation = 'pom.xml'
     def containerName = config.containerName ?: 'clients'
 
-    def flow = new Fabric8Commands()
+    def flow = new AssemblyLineCommands()
 
     def replaceVersions = [:]
     def localPomXml = readFile file: pomLocation
@@ -83,8 +83,8 @@ def call(body) {
                         sh 'chmod 600 /root/.ssh-git/ssh-key.pub'
                         sh 'chmod 700 /root/.ssh-git'
 
-                        sh "git config --global user.email fabric8-admin@googlegroups.com"
-                        sh "git config --global user.name fabric8-release"
+                        sh "git config --global user.email assemblyline-admin@googlegroups.com"
+                        sh "git config --global user.name assemblyline-release"
 
                         def githubToken = flow.getGitHubToken()
                         def message = "\"Update pom property versions\""

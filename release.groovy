@@ -1,11 +1,11 @@
 #!/usr/bin/groovy
-import io.fabric8.Fabric8Commands
+import io.assemblyline.AssemblyLineCommands
 
 def tagDownstreamRepos() {
-    def flow = new Fabric8Commands()
+    def flow = new AssemblyLineCommands()
     def newVersion
 
-    setWorkspace('fabric8io/fabric8-pipeline-library')
+    setWorkspace('assemblylineio/assemblyline-pipeline-library')
     newVersion = getJenkinsVersion()
     container(name: 'clients') {
 
@@ -13,8 +13,8 @@ def tagDownstreamRepos() {
 
     }
 
-    git 'https://github.com/fabric8io/fabric8-jenkinsfile-library.git'
-    setWorkspace('fabric8io/fabric8-jenkinsfile-library')
+    git 'https://github.com/assemblylineio/assemblyline-jenkinsfile-library.git'
+    setWorkspace('assemblylineio/assemblyline-jenkinsfile-library')
 
     container(name: 'clients') {
 
@@ -32,14 +32,14 @@ def tagDownstreamRepos() {
 
 def getJenkinsVersion() {
     def m = readMavenPom file: 'pom.xml'
-    def v = m.properties['fabric8.devops.version']
+    def v = m.properties['assemblyline.devops.version']
     return v
 }
 
 def setWorkspace(String project) {
     sh "git remote set-url origin git@github.com:${project}.git"
-    sh "git config user.email fabric8-admin@googlegroups.com"
-    sh "git config user.name fabric8-release"
+    sh "git config user.email assemblyline-admin@googlegroups.com"
+    sh "git config user.name assemblyline-release"
     sh 'chmod 600 /root/.ssh-git/ssh-key'
     sh 'chmod 600 /root/.ssh-git/ssh-key.pub'
     sh 'chmod 700 /root/.ssh-git'

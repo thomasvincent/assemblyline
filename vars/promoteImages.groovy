@@ -20,12 +20,12 @@ def call(body) {
 
         image = config.images[i]
 
-        def flow = new io.fabric8.Fabric8Commands()
+        def flow = new io.assemblyline.AssemblyLineCommands()
         // if we're running on a single node then we already have the image on this host so no need to pull image
         if (flow.isSingleNode()){
             sh "docker tag ${config.org}/${image}:${config.tag} ${config.toRegistry}/${config.org}/${image}:${config.tag}"
         } else {
-            sh "docker pull ${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}/fabric8/${image}:${config.tag}"
+            sh "docker pull ${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}/assemblyline/${image}:${config.tag}"
             sh "docker tag ${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}/${config.org}/${image}:${config.tag} ${config.toRegistry}/${config.org}/${image}:${config.tag}"
         }
         

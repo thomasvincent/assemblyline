@@ -7,7 +7,7 @@ def call(body) {
     body.delegate = config
     body()
 
-    def flow = new io.fabric8.Fabric8Commands()
+    def flow = new io.assemblyline.AssemblyLineCommands()
     def repoIds = config.stagedProject[2]
 
     withEnv(["PATH+MAVEN=${tool 'maven-3.3.1'}/bin"]) {

@@ -31,8 +31,8 @@ def call(body) {
     dir(buildPath) {
         git "https://github.com/${ghOrg}/${prj}.git"
 
-        sh "git config user.email fabric8-admin@googlegroups.com"
-        sh "git config user.name fabric8-release"
+        sh "git config user.email assemblyline-admin@googlegroups.com"
+        sh "git config user.name assemblyline-release"
         sh "git remote set-url origin git@github.com:${ghOrg}/${prj}.git"
 
         container(name: 'go') {
@@ -54,7 +54,7 @@ def call(body) {
                     version = getNewVersion {}
                 }
 
-                def token = new io.fabric8.Fabric8Commands().getGitHubToken()
+                def token = new io.assemblyline.AssemblyLineCommands().getGitHubToken()
                 sh "export GITHUB_ACCESS_TOKEN=${token}; make -e BRANCH=master release"
             }
         }

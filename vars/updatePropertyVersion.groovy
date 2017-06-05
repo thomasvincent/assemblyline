@@ -6,10 +6,10 @@ def call(body) {
   body.delegate = config
   body()
 
-    def flow = new io.fabric8.Fabric8Commands()
+    def flow = new io.assemblyline.AssemblyLineCommands()
 
-    sh "git config user.email fabric8-admin@googlegroups.com"
-    sh "git config user.name fabric8-cd"
+    sh "git config user.email assemblyline-admin@googlegroups.com"
+    sh "git config user.name assemblyline-cd"
 
     def uid = UUID.randomUUID().toString()
     sh "git checkout -b versionUpdate${uid}"

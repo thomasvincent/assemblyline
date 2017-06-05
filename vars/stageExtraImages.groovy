@@ -10,10 +10,10 @@ def call(body) {
       for(int i = 0; i < config.images.size(); i++){
         image = config.images[i]
         retry (3){
-          sh "docker pull docker.io/fabric8/${image}:latest"
-          sh "docker tag docker.io/fabric8/${image}:latest ${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}/fabric8/${image}:${config.tag}"
-          sh "docker tag docker.io/fabric8/${image}:latest docker.io/fabric8/${image}:${config.tag}"
-          sh "docker push ${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}/fabric8/${image}:${config.tag}"
+          sh "docker pull docker.io/assemblyline/${image}:latest"
+          sh "docker tag docker.io/assemblyline/${image}:latest ${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}/assemblyline/${image}:${config.tag}"
+          sh "docker tag docker.io/assemblyline/${image}:latest docker.io/assemblyline/${image}:${config.tag}"
+          sh "docker push ${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}/assemblyline/${image}:${config.tag}"
         }
       }
     }

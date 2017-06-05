@@ -14,7 +14,7 @@ def call(body) {
 
     def machineType = 'n1-standard-2'
     def zone = 'europe-west1-b'
-    def project = 'fabric8-1342'
+    def project = 'assemblyline-1342'
     def numberOfNodes = '2'
     def diskSize = '50'
     def consoleURL
@@ -45,29 +45,29 @@ parameters:
   type: pd-standard
 EOF
 """
-            stage('Deploying fabric8')
+            stage('Deploying assemblyline')
 
-            // get the latest gofabric8 and deploy onto our new GKE cluster
-            sh "curl -sS https://get.fabric8.io/download.txt | bash"
+            // get the latest goassemblyline and deploy onto our new GKE cluster
+            sh "curl -sS https://get.assemblyline.io/download.txt | bash"
 
             // optionally overrite the default yaml so we can test non released versions
             if (packageYAML != null){
                 writeFile file: 'packageYAML', text: packageYAML
-                sh " ~/.fabric8/bin/gofabric8 deploy --package packageYAML -y"
+                sh " ~/.assemblyline/bin/goassemblyline deploy --package packageYAML -y"
             } else {
-                sh " ~/.fabric8/bin/gofabric8 deploy -y"
+                sh " ~/.assemblyline/bin/goassemblyline deploy -y"
             }
 
-            sh " ~/.fabric8/bin/gofabric8 wait-for jenkins gogs fabric8-forge nexus fabric8-docker-registry exposecontroller configmapcontroller"
-            consoleURL = sh(returnStdout: true, script: 'TERM=dumb && ~/.fabric8/bin/gofabric8 service fabric8 -u').trim()
+            sh " ~/.assemblyline/bin/goassemblyline wait-for jenkins gogs assemblyline-forge nexus assemblyline-docker-registry exposecontroller configmapcontroller"
+            consoleURL = sh(returnStdout: true, script: 'TERM=dumb && ~/.assemblyline/bin/goassemblyline service assemblyline -u').trim()
             clusterInfo = sh(returnStdout: true, script: 'TERM=dumb && kubectl cluster-info').trim()
         } catch (e) {
-            echo "ERROR creating new fabric8 cluster ${e}"
+            echo "ERROR creating new assemblyline cluster ${e}"
             sh "gcloud container clusters delete ${clusterName} -q"
             error "${e}"
         }
 
-        hubot room: 'release', message: "fabric8 deployed and system tests about to start, to follow along visit ${consoleURL}"
+        hubot room: 'release', message: "assemblyline deployed and system tests about to start, to follow along visit ${consoleURL}"
 
         try {
             stage('Running system tests')

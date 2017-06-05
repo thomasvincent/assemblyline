@@ -6,7 +6,7 @@ def call(body) {
     body.delegate = config
     body()
 
-    def flow = new io.fabric8.Fabric8Commands()
+    def flow = new io.assemblyline.AssemblyLineCommands()
     container(name: 'maven') {
 
         // update any versions that we want to override
@@ -44,16 +44,16 @@ def call(body) {
 
                 }else{
                     retry(3){
-                        sh "mvn fabric8:push -Ddocker.push.registry=${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}"
+                        sh "mvn assemblyline:push -Ddocker.push.registry=${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}"
                     }
                 }
             }
         }
 
         stage ('Integration Testing'){
-            def utils = new io.fabric8.Utils()
+            def utils = new io.assemblyline.Utils()
             def envTest = utils.environmentNamespace('test')
-            sh "mvn org.apache.maven.plugins:maven-failsafe-plugin:2.18.1:integration-test -Dfabric8.environment=${envTest} -Dit.test=*IT -DfailIfNoTests=false org.apache.maven.plugins:maven-failsafe-plugin:2.18.1:verify"
+            sh "mvn org.apache.maven.plugins:maven-failsafe-plugin:2.18.1:integration-test -Dassemblyline.environment=${envTest} -Dit.test=*IT -DfailIfNoTests=false org.apache.maven.plugins:maven-failsafe-plugin:2.18.1:verify"
         }
         
         return version

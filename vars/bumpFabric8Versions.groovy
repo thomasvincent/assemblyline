@@ -6,12 +6,12 @@ def call(body) {
   body.delegate = config
   body()
 
-  def project = 'fabric8'
+  def project = 'assemblyline'
   stage "bump ${project} versions"
 
   withEnv(["PATH+MAVEN=${tool 'maven-3.3.1'}/bin"]) {
 
-    def flow = new io.fabric8.Fabric8Commands()
+    def flow = new io.assemblyline.AssemblyLineCommands()
     flow.setupWorkspace (project)
 
     def uid = UUID.randomUUID().toString()
@@ -19,8 +19,8 @@ def call(body) {
 
     def updated = false
     try {
-      // bump fabric8 release dependency versions
-      def kubernetesModelVersion = flow.getReleaseVersion 'io/fabric8/kubernetes-model'
+      // bump assemblyline release dependency versions
+      def kubernetesModelVersion = flow.getReleaseVersion 'io/assemblyline/kubernetes-model'
       flow.searchAndReplaceMavenVersionProperty('<kubernetes-model.version>', kubernetesModelVersion)
       updated = true
     } catch (err) {
@@ -28,7 +28,7 @@ def call(body) {
     }
 
     try {
-      def kubernetesClientVersion = flow.getReleaseVersion 'io/fabric8/kubernetes-client'
+      def kubernetesClientVersion = flow.getReleaseVersion 'io/assemblyline/kubernetes-client'
       flow.searchAndReplaceMavenVersionProperty('<kubernetes-client.version>', kubernetesClientVersion)
       updated = true
     } catch (err) {
@@ -39,7 +39,7 @@ def call(body) {
       sh "git push origin versionUpdate${uid}"
       return flow.createPullRequest("[CD] Update release dependencies","${project}","versionUpdate${uid}")
     } else {
-      message = "fabric8 already on the latest release versions"
+      message = "assemblyline already on the latest release versions"
       hubot room: 'release', message: message
       return
     }

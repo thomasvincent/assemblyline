@@ -7,7 +7,7 @@ def call(body) {
     body.delegate = config
     body()
 
-    def flow = new io.fabric8.Fabric8Commands()
+    def flow = new io.assemblyline.AssemblyLineCommands()
 
     waitUntil {
         retry(3){

@@ -1,17 +1,17 @@
 #!/usr/bin/groovy
-import io.fabric8.Fabric8Commands
+import io.assemblyline.AssemblyLineCommands
 
 def call(Map parameters = [:], body) {
 
-    def flow = new Fabric8Commands()
+    def flow = new AssemblyLineCommands()
 
     def defaultLabel = buildId('s2i')
     def label = parameters.get('label', defaultLabel)
 
-    def s2iImage = parameters.get('s2iImage', 'fabric8/s2i-builder:0.0.2')
+    def s2iImage = parameters.get('s2iImage', 'assemblyline/s2i-builder:0.0.2')
 
     def inheritFrom = parameters.get('inheritFrom', 'base')
-    def jnlpImage = (flow.isOpenShift()) ? 'fabric8/jenkins-slave-base-centos7:0.0.1' : 'jenkinsci/jnlp-slave:2.62'
+    def jnlpImage = (flow.isOpenShift()) ? 'assemblyline/jenkins-slave-base-centos7:0.0.1' : 'jenkinsci/jnlp-slave:2.62'
 
     def cloud = flow.getCloudConfig()
 

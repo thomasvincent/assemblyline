@@ -7,8 +7,8 @@ def call(body) {
     body.delegate = config
     body()
 
-    def flow = new io.fabric8.Fabric8Commands()
-    def utils = new io.fabric8.Utils()
+    def flow = new io.assemblyline.AssemblyLineCommands()
+    def utils = new io.assemblyline.Utils()
 
     def skipTests = config.skipTests ?: false
 
@@ -36,11 +36,11 @@ def call(body) {
     if (buildName != null && !buildName.isEmpty()) {
         def buildUrl = "${env.BUILD_URL}"
         if (!buildUrl.isEmpty()) {
-            utils.addAnnotationToBuild('fabric8.io/jenkins.testReportUrl', "${buildUrl}testReport")
+            utils.addAnnotationToBuild('assemblyline.io/jenkins.testReportUrl', "${buildUrl}testReport")
         }
         def changeUrl = env.CHANGE_URL
         if (changeUrl != null && !changeUrl.isEmpty()) {
-            utils.addAnnotationToBuild('fabric8.io/jenkins.changeUrl', changeUrl)
+            utils.addAnnotationToBuild('assemblyline.io/jenkins.changeUrl', changeUrl)
         }
 
         if (flow.hasService("bayesian-link")) {
@@ -48,7 +48,7 @@ def call(body) {
                 sh 'mvn io.github.stackinfo:stackinfo-maven-plugin:0.2:prepare'
                 def response = bayesianAnalysis url: 'https://bayesian-link'
                 if (response.success) {
-                    utils.addAnnotationToBuild('fabric8.io/bayesian.analysisUrl', response.getAnalysisUrl())
+                    utils.addAnnotationToBuild('assemblyline.io/bayesian.analysisUrl', response.getAnalysisUrl())
                 } else {
                     error "Bayesian analysis failed ${response}"
                 }
@@ -76,7 +76,7 @@ def call(body) {
 
         }else{
             retry(3){
-                sh "mvn fabric8:push -Ddocker.push.registry=${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}"
+                sh "mvn assemblyline:push -Ddocker.push.registry=${env.FABRIC8_DOCKER_REGISTRY_SERVICE_HOST}:${env.FABRIC8_DOCKER_REGISTRY_SERVICE_PORT}"
             }
         }
     }

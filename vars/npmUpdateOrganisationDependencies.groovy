@@ -1,8 +1,8 @@
 #!/usr/bin/groovy
 import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonSlurperClassic
-import io.fabric8.Fabric8Commands
-import io.fabric8.Utils
+import io.assemblyline.AssemblyLineCommands
+import io.assemblyline.Utils
 import java.util.LinkedHashMap
 
 def call(body) {
@@ -19,7 +19,7 @@ def call(body) {
     def replaceVersions = loadPackagePropertyVersions(localPackageJSON)
     def newPRID
 
-    def flow = new Fabric8Commands()
+    def flow = new AssemblyLineCommands()
     def utils = new Utils()
 
     println "About to try replace versions: '${replaceVersions}'"
@@ -81,8 +81,8 @@ def call(body) {
                                 sh 'chmod 600 /root/.ssh-git/ssh-key.pub'
                                 sh 'chmod 700 /root/.ssh-git'
 
-                                sh "git config --global user.email fabric8-admin@googlegroups.com"
-                                sh "git config --global user.name fabric8-release"
+                                sh "git config --global user.email assemblyline-admin@googlegroups.com"
+                                sh "git config --global user.name assemblyline-release"
 
                                 def message = "fix(version): update ${property} to ${version}"
                                 sh "git add ${packageLocation}"

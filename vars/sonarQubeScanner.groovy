@@ -9,7 +9,7 @@ def call(body) {
     def scannerVersion = config.scannerVersion ?: "2.8"
 
 
-    def flow = new io.fabric8.Fabric8Commands()
+    def flow = new io.assemblyline.AssemblyLineCommands()
 
     echo "Checking ${serviceName} exists"
     if (flow.hasService(serviceName)) {

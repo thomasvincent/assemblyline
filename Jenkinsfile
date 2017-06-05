@@ -1,11 +1,11 @@
 #!/usr/bin/groovy
-import io.fabric8.Fabric8Commands
+import io.assemblyline.AssemblyLineCommands
 
-@Library('github.com/fabric8io/fabric8-pipeline-library@master')
+@Library('github.com/assemblylineio/assemblyline-pipeline-library@master')
 def dummy
 clientsNode {
     ws ('pipelines'){
-        git 'https://github.com/fabric8io/fabric8-pipeline-library.git'
+        git 'https://github.com/assemblylineio/assemblyline-pipeline-library.git'
 
         def pipeline = load 'release.groovy'
 

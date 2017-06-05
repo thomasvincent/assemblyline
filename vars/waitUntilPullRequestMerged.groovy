@@ -9,7 +9,7 @@ def call(body) {
     body.delegate = config
     body()
 
-    def flow = new io.fabric8.Fabric8Commands()
+    def flow = new io.assemblyline.AssemblyLineCommands()
     def githubToken = flow.getGitHubToken()
 
     echo "pull request id ${config.prId}"

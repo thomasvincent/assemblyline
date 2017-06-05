@@ -14,12 +14,12 @@ def call(body) {
     sh 'kubectl config use-context kube'
 
     try{
-      sh 'kubectl delete namespace fabric8-test'
+      sh 'kubectl delete namespace assemblyline-test'
       waitUntil{
         // wait until the project has been deleted
         try{
-          sh "kubectl get namespace | cut -f 1 -d ' ' | grep fabric8-test"
-          echo 'kubectl namespace fabric8-test still exists, waiting until deleted'
+          sh "kubectl get namespace | cut -f 1 -d ' ' | grep assemblyline-test"
+          echo 'kubectl namespace assemblyline-test still exists, waiting until deleted'
         } catch (err) {
           echo "${err}"
           // project doesnt exist anymore so continue
@@ -30,10 +30,10 @@ def call(body) {
     } catch (err) {
       // dont need to worry if there's no existing test environment to delete
     }
-    sh 'kubectl create namespace fabric8-test'
-    sh "kubectl config set-context test --user=kube --namespace=fabric8-test --cluster=kube"
+    sh 'kubectl create namespace assemblyline-test'
+    sh "kubectl config set-context test --user=kube --namespace=assemblyline-test --cluster=kube"
     sh 'kubectl config use-context test'
-    sh "gofabric8 deploy -y --docker-registry ${config.stagingDockerRegistry} --api-server ${config.url} --maven-repo https://oss.sonatype.org/content/repositories/staging/"
+    sh "goassemblyline deploy -y --docker-registry ${config.stagingDockerRegistry} --api-server ${config.url} --maven-repo https://oss.sonatype.org/content/repositories/staging/"
 
   }
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/groovy
 import com.cloudbees.groovy.cps.NonCPS
-import io.fabric8.Fabric8Commands
+import io.assemblyline.AssemblyLineCommands
 
 def call(body) {
     // evaluate the body block, and collect configuration into the object
@@ -36,7 +36,7 @@ def call(body) {
 
 @NonCPS
 def overwriteDeps(versions){
-    def flow = new Fabric8Commands()
+    def flow = new AssemblyLineCommands()
     for (v in versions) {
         flow.searchAndReplaceMavenVersionPropertyNoCommit(v.key, v.value)
     }

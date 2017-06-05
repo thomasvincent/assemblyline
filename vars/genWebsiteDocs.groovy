@@ -31,8 +31,8 @@ def call(body) {
     def artifactId = config.artifactId
     def docVersion = config.project[1]
     def docgenScript = config.docgenScript ?: null
-    def gitUser = config.gitUser ?: "fabric8-release"
-    def gitEmail = config.gitEmail ?: "fabric8-admin@googlegroups.com"
+    def gitUser = config.gitUser ?: "assemblyline-release"
+    def gitEmail = config.gitEmail ?: "assemblyline-admin@googlegroups.com"
 
     //Array of Maven Profiles
     def profiles = config.profiles ?: null
