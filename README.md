@@ -59,7 +59,7 @@ This library is intended to be used with Assembly Line's Jenkins image that is d
 To use the functions in this library just add the following to the top of your `Jenkinsfile`:
 
 ```groovy
-@Library('github.com/assemblyline/io/src/assemblyline-pipeline-library@master')
+@Library('github.com/thomasvincent/assemblyline/io/src/assemblyline-pipeline-library@master')
 ```
 
 That will use the master branch of this library. You can if you wish pick a specific [tag](https://github.com/thomasvincent/assemblyline/io/src/assemblyline-pipeline-library/tags) or [commit SHA](https://github.com/thomasvincent/assemblyline/io/assemblyline-pipeline-library/commits/master) of this repository too.
@@ -163,7 +163,7 @@ __WARNING this function is deprecated.  Please change to use getDeploymentResour
 
 - creates a release branch
 - sets the gradle pom versions using versions-gradle-plugin
-- runs `mvn deploy docker:build`
+- runs `gradlew deploy docker:build`
 - generates gradle site and deploys it to the content repository
 ```groovy
     gradleCanaryRelease{
@@ -403,7 +403,7 @@ __NOTE__ in order for images to be found by the the remote OpenShift instance it
 Add an annotation to the matching openshift build
 
 ```groovy
-    @Library('github.com/assemblyline/io/assemblyline-pipeline-library@master')
+    @Library('github.com/thomasvincent/assemblyline/io/assemblyline-pipeline-library@master')
     def dummy
     node{
         def utils = new io.assemblyline.Utils()
@@ -453,7 +453,7 @@ A template defines how the jenkins slave pod will look like, but the pod is not 
 When a node is requested the matching template will be selected and pod from the template will be created.
 
 The library provides shortcut function both to nodes and templates. In most cases you will just need to use the node.
-The only exception is when you need to mix and match (see [mixing and mathcing](#mixing-and-matching)).
+The only exception is when you need to mix and match (see [mixing and matching](#mixing-and-matching)).
 
 
 The provided node / template pairs are the following:
@@ -469,7 +469,7 @@ Provides gradle capabilities by adding a container with the gradle image.
 The container mounts the following volumes:
 
 * Secret `jenkins-gradle-settings` Add your gradle configuration here.
-* PersistentVolumeClaim `jenkins-mvn-local-repo` The gradle local repository to use.
+* PersistentVolumeClaim `jenkins-gradlew-local-repo` The gradle local repository to use.
 
 The gradle node and template support limited customization through the following properties:
 
@@ -479,7 +479,7 @@ Example:
 
     gradleNode(gradleImage: 'gradle:3.3.9-jdk-7') {
         container(name: 'gradle') {
-            sh 'mvn clean install'
+            sh 'gradlew clean install'
         }
     }
 
@@ -555,7 +555,7 @@ For this case you can combine add the docker template and the gradle template to
         gradleTemplate(label: 'gradle-and-docker') {
             node('gradle-and-docker') {
                  container(name: 'gradle') {
-                    sh 'mvn clean package assemblyline:build assemblyline:push'
+                    sh 'gradlew clean package assemblyline:build assemblyline:push'
                  }            
             }
         }
@@ -566,7 +566,7 @@ The above is equivalent to:
     dockerTemplate {
         gradleNode(label: 'gradle-and-docker') {
             container(name: 'gradle') {
-                sh 'mvn clean package assemblyline:build assemblyline:push'
+                sh 'gradlew clean package assemblyline:build assemblyline:push'
             }            
         }
     }
@@ -579,8 +579,8 @@ In the example above we can add release capabilities too, by adding the releaseT
                     gradleNode(label: 'gradle-and-docker') {
                         container(name: 'gradle') {
                             sh """
-                                mvn release:clean release:prepare
-                                mvn clean release:perform
+                                gradlew release:clean release:prepare
+                                gradlew clean release:perform
                             """
                         }            
                     }
@@ -595,7 +595,7 @@ Templates can be created either by using the Jenkins administration console or b
 #### Using the Jenkins Administration Console
 
 In the console choose `Manage Jenkins` -> `Configure System` and scroll down until you find the section `Cloud` -> `Kubernetes`.
-There you can click to `Add Pod Template` to create your own using the wizzard.
+There you can click to `Add Pod Template` to create your own using the wizard.
 
 Then you can just instantiate the template by creating a node that references the label to the template:
 
