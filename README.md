@@ -32,7 +32,6 @@ This software is provided under the Apache License, Version 2.0 license. See the
       - [Approve](#approve)
       - [Deploy Project](#deploy-project)
       - [Drop Project](#drop-project)
-      - [Get Kubernetes JSON](#get-kubernetes-json)
       - [Get New Version](#get-new-version)
       - [Gradle Canary Release](#gradle-canary-release)
       - [Gradle Integration Test](#gradle-integration-test)
@@ -150,25 +149,6 @@ in the case of an aborted approval
         }
 
         kubernetesApply(file: resources, environment: 'my-cool-app-staging', registry: 'myexternalregistry.io:5000')
-    }
-```
-#### Get Kubernetes JSON
-
-__WARNING this function is deprecated.  Please change to use getDeploymentResources{}__
-
-- returns a default OpenShift templates that gets translated into Kubernetes List when applied by kubernetes-workflow apply step and running on Kubernetes
-- returns a service and replication controller JSON using sensible defaults
-- can be used in conjunction with [kubernetesApply](https://github.com/jenkinsci/kubernetes-pipeline-plugin/blob/master/devops-steps/readme.md#applying-kubernetes-configuration)
-```groovy
-    node {
-        def rc = getKubernetesJson {
-          port = 8080
-          label = 'node'
-          icon = 'https://cdn.rawgit.com/assemblyline/io/assemblyline/dc05040/website/src/images/logos/nodejs.svg'
-          version = '0.0.1'
-        }
-
-        kubernetesApply(file: rc, environment: 'my-cool-app-staging', registry: 'myexternalregistry.io:5000')
     }
 ```
 #### Get New Version
