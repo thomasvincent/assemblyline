@@ -6,6 +6,24 @@
 
 **Table of Contents**
 
+Contributing
+
+Is there anything missing? Do you have ideas for new features or improvements?
+
+All you have to do is to fork this repository, improve the code and issue a pull request.
+
+Maintainer
+
+Thomas Vincent (@thomasvincent)
+
+Sponsor
+
+Nobody ;)
+
+License
+
+This software is provided under the Apache License, Version 2.0 license. See the LICENSE file for details.
+
 - [Pipeline Library](pipeline-library)
   - [How to use this library](#how-to-use-this-library)
     - [Making changes](#making-changes)
