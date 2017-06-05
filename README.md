@@ -1,8 +1,8 @@
 **WIP**
 
-**Inspired by the Fabric8 release pipeline library**
+**Inspired by the Fabric8 release pipeline library, but written for Gradle**
 
-**Assembly Line Pipeline Library for continous integration and delivery
+**Assembly Line Pipeline Library for continous integration and delivery**
 
 **Table of Contents**
 
@@ -16,13 +16,13 @@
       - [Drop Project](#drop-project)
       - [Get Kubernetes JSON](#get-kubernetes-json)
       - [Get New Version](#get-new-version)
-      - [Maven Canary Release](#maven-canary-release)
-      - [Maven Integration Test](#maven-integration-test)
+      - [Gradle Canary Release](#gradle-canary-release)
+      - [Gradle Integration Test](#gradle-integration-test)
       - [Merge and Wait for Pull Request](#merge-and-wait-for-pull-request)
       - [Perform Canary Release](#perform-canary-release)
       - [REST Get URL](#rest-get-url)
-      - [Update Maven Property Version](#update-maven-property-version)
-      - [Wait Until Artifact Synced With Maven Central](#wait-until-artifact-synced-with-maven-central)
+      - [Update Gradle Property Version](#update-gradle-property-version)
+      - [Wait Until Artifact Synced With Gradle Central](#wait-until-artifact-synced-with-gradle-central)
       - [Wait Until Pull Request Merged](#wait-until-pull-request-merged)
     - [assemblyline release](#assemblyline-release)
       - [Promote Artifacts](#promote-artifacts)
@@ -35,7 +35,7 @@
       - [Deploy Remote Kubernetes](#deploy-remote-kubernetes)
   - [Understanding how it works](#understanding-how-it-works)
       - [Templates vs Nodes](#templates-vs-nodes)
-        - [Maven Node](#maven-node)
+        - [Gradle Node](#gradle-node)
         - [Docker Node](#docker-node)
         - [Clients Node](#clients-node)
         - [Release Node](#release-node)
@@ -50,17 +50,11 @@
 
 This git repository contains a library of reusable [Jenkins Pipeline](https://jenkins.io/doc/book/pipeline/) steps and functions that can be used in your `Jenkinsfile` to help improve your Continuous Delivery pipeline.
 
-<p align="center">
-  <a href="http://assemblyline.io/guide/cdelivery.html">
-  	<img src="https://raw.githubusercontent.com/assemblyline/io/assemblyline/master/docs/images/cover/cover_small.png" alt="assemblyline logo"/>
-  </a>
-</p>
-
 The idea is to try promote sharing of scripts across projects where it makes sense.
 
 ## How to use this library
 
-This library is intended to be used with assemblyline's Jenkins image that is deployed as part of the [assemblyline platform](https://assemblyline.io).
+This library is intended to be used with Assembly Line's Jenkins image that is deployed as part of the [assemblyline platform](https://assemblyline.io).
 
 To use the functions in this library just add the following to the top of your `Jenkinsfile`:
 
@@ -68,7 +62,7 @@ To use the functions in this library just add the following to the top of your `
 @Library('github.com/assemblyline/io/src/assemblyline-pipeline-library@master')
 ```
 
-That will use the master branch of this library. You can if you wish pick a specific [tag](https://github.com/assemblyline/io/src/assemblyline-pipeline-library/tags) or [commit SHA](https://github.com/assemblyline/io/assemblyline-pipeline-library/commits/master) of this repository too.
+That will use the master branch of this library. You can if you wish pick a specific [tag](https://github.com/thomasvincent/assemblyline/io/src/assemblyline-pipeline-library/tags) or [commit SHA](https://github.com/thomasvincent/assemblyline/io/assemblyline-pipeline-library/commits/master) of this repository too.
 
 ### Making changes
 
@@ -81,7 +75,7 @@ If you do make local changes we'd love a `Pull Request` back though! We love con
 
 ### Requirements
 
-These flows make use of the [assemblyline DevOps Pipeline Steps](https://github.com/assemblyline/io/assemblyline-jenkins-workflow-steps) and [kubernetes-plugin](https://github.com/jenkinsci/kubernetes-plugin) which help when working with [assemblyline DevOps](http://assemblyline.io/guide/cdelivery.html) in particular for clean integration with the [Hubot chat bot](https://hubot.github.com/) and human approval of staging, promotion and releasing.
+These flows make use of the [assemblyline DevOps Pipeline Steps](https://github.com/thomasvincent/assemblyline/io/assemblyline-jenkins-workflow-steps) and [kubernetes-plugin](https://github.com/jenkinsci/kubernetes-plugin) which help when working with [assemblyline DevOps](http://assemblyline.io/guide/cdelivery.html) in particular for clean integration with the [Hubot chat bot](https://hubot.github.com/) and human approval of staging, promotion and releasing.
 
 ### Functions from the Jenkins global library
 
@@ -165,23 +159,23 @@ __WARNING this function is deprecated.  Please change to use getDeploymentResour
 ```groovy
     def newVersion = getNewVersion{}
 ```
-#### Maven Canary Release
+#### Gradle Canary Release
 
 - creates a release branch
-- sets the maven pom versions using versions-maven-plugin
+- sets the gradle pom versions using versions-gradle-plugin
 - runs `mvn deploy docker:build`
-- generates maven site and deploys it to the content repository
+- generates gradle site and deploys it to the content repository
 ```groovy
-    mavenCanaryRelease{
+    gradleCanaryRelease{
       version = canaryVersion
     }
 ```
-#### Maven Integration Test
+#### Gradle Integration Test
 
 - lazily creates a test environment in kubernetes
-- runs maven integration tests in test environment
+- runs gradle integration tests in test environment
 ```groovy
-    mavenIntegrationTest{
+    gradleIntegrationTest{
       environment = 'Testing'
       failIfNoTests = 'false'
       itestPattern = '*KT'
@@ -222,11 +216,11 @@ __WARNING this function is deprecated.  Please change to use getDeploymentResour
       url = apiUrl
     }
 ```
-#### Update Maven Property Version
-During a release involving multiple java projects we often need to update downstream maven poms with new versions of a dependency.  In a release pipeline we want to automate this, set up a pull request and let CI run to make sure there's no conflicts.  
+#### Update Gradle Property Version
+During a release involving multiple java projects we often need to update downstream gradle poms with new versions of a dependency.  In a release pipeline we want to automate this, set up a pull request and let CI run to make sure there's no conflicts.  
 
-- performs a search and replace in the maven pom
-- finds the latest version available in maven central (repo is configurable)
+- performs a search and replace in the gradle pom
+- finds the latest version available in gradle central (repo is configurable)
 - if newer version exists pom is updated
 - pull request submitted
 - pipeline will wait until this is merged before continuing
@@ -240,23 +234,23 @@ Automating this has saved us a lot of time during the release pipeline
 ```groovy
     def properties = []
     properties << ['<assemblyline.version>','io/assemblyline/kubernetes-api']
-    properties << ['<docker.maven.plugin.version>','io/assemblyline/docker-maven-plugin']
+    properties << ['<docker.gradle.plugin.version>','io/assemblyline/docker-gradle-plugin']
 
     updatePropertyVersion{
       updates = properties
-      repository = source // if null defaults to http://central.maven.org/maven2/
+      repository = source // if null defaults to http://central.gradle.org/gradle2/
       project = 'assemblyline/io/ipaas-quickstarts'
     }
 ```
-#### Wait Until Artifact Synced With Maven Central
-When working with open source java projects we need to stage artifacts with OSS Sonartype in order to promote them into maven central.  This can take 10-30 mins depending on the size of the artifacts being synced.  
+#### Wait Until Artifact Synced With Gradle Central
+When working with open source java projects we need to stage artifacts with OSS Sonartype in order to promote them into gradle central.  This can take 10-30 mins depending on the size of the artifacts being synced.  
 
-A useful thing is to be notified in chat when artifacts are available in maven central as blocking the pipeine until we're sure the promote has worked.
+A useful thing is to be notified in chat when artifacts are available in gradle central as blocking the pipeine until we're sure the promote has worked.
 
-- polls waiting for artifacts to be available in maven central
+- polls waiting for artifacts to be available in gradle central
 ```groovy
     waitUntilArtifactSyncedWithCentral {
-      repo = 'http://central.maven.org/maven2/'
+      repo = 'http://central.gradle.org/gradle2/'
       groupId = 'io.assemblyline.archetypes'
       artifactId = 'archetypes-catalog'
       version = '0.0.1'
@@ -299,12 +293,12 @@ When a project is staged an array is returned and passed around functions furthe
     }
 ```
 
-One other important note is on the assemblyline project we don't use the maven release plugin or update to next SNAPSHOT versions as it causes unwanted noise and commits to our many github repos.  Instead we use a fixed development `x.x-SNAPSHOT` version so we can easily work in development on multiple projects that have maven dependencies with each other.  
+One other important note is on the assemblyline project we don't use the gradle release plugin or update to next SNAPSHOT versions as it causes unwanted noise and commits to our many github repos.  Instead we use a fixed development `x.x-SNAPSHOT` version so we can easily work in development on multiple projects that have gradle dependencies with each other.  
 
-Now that we don't store the next release version in the poms we need to figure it out during the release.  Rather than store the version number in the repo which involves a commit and not too CD friendly (i.e. would trigger another release just for the version update) we use the `git tag`.  From this we can get the previous release version, increment it and push it back without triggering another release.  This seems a bit strange but it has been holding up and has significantly reduced unwanted SCM commits related to maven releases.
+Now that we don't store the next release version in the poms we need to figure it out during the release.  Rather than store the version number in the repo which involves a commit and not too CD friendly (i.e. would trigger another release just for the version update) we use the `git tag`.  From this we can get the previous release version, increment it and push it back without triggering another release.  This seems a bit strange but it has been holding up and has significantly reduced unwanted SCM commits related to gradle releases.
 
 #### Promote Artifacts
-- releases OSS sonartype staging repository so that artifacts are synced with maven central
+- releases OSS sonartype staging repository so that artifacts are synced with gradle central
 - commits generated Helm charts to the assemblyline Helm repo
 - if useGitTagForNextVersion is set (true by default) then the next snapshot development version PR is committed
 ```groovy
@@ -316,11 +310,11 @@ Now that we don't store the next release version in the poms we need to figure i
     }
 ```
 #### Release Project
-- promotes artifacts from OSS sonartype staging repo to maven central
+- promotes artifacts from OSS sonartype staging repo to gradle central
 - promotes images from internal docker registry to dockerhub
 - waits for github pull request to merge if updating next snapshot version (not used by default)
-- waits for artifacts to be synced and available in maven central
-- sends chat notification when artifacts appear in maven central
+- waits for artifacts to be synced and available in gradle central
+- sends chat notification when artifacts appear in gradle central
 ```groovy
     releaseProject{
       stagedProject = project
@@ -347,7 +341,7 @@ Now that we don't store the next release version in the poms we need to figure i
 #### Stage Project
 - builds and stages a assemblyline java project with OSS sonartype
 - build docker images and stages them in the internal docker registry
-- stages extra images not built by docker-maven-plugin in the internal docker registry
+- stages extra images not built by docker-gradle-plugin in the internal docker registry
 ```groovy
     def stagedProject = stageProject{
       project = 'assemblyline/io/ipaas-quickstarts'
@@ -420,35 +414,35 @@ Add an annotation to the matching openshift build
 ## Understanding how it works
 
 Most of the functions provided by this library are meant to run inside a Kubernetes or Openshift pod. Those pods are managed by the [kubernetes plugin](https://github.com/jenkinsci/kubernetes-plugin).
-This library abstracts the pipeline capabilities of [kubernetes plugin](https://github.com/jenkinsci/kubernetes-plugin) so that it makes it easier to use. So for example when you need to use a pod with maven capabilities
+This library abstracts the pipeline capabilities of [kubernetes plugin](https://github.com/jenkinsci/kubernetes-plugin) so that it makes it easier to use. So for example when you need to use a pod with gradle capabilities
 instead of defining something like:
 
-    podTemplate(label: 'maven-node', containers: [
-        containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
+    podTemplate(label: 'gradle-node', containers: [
+        containerTemplate(name: 'gradle', image: 'gradle:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
       ],
       volumes: [secretVolume(secretName: 'shared-secrets', mountPath: '/etc/shared-secrets')]) {
 
-        node('maven-node') {
-            container(name: 'maven') {
+        node('gradle-node') {
+            container(name: 'gradle') {
                 ...
             }
         }
       }
 
-You can just use the mavenTemplate provided by this library:
+You can just use the gradleTemplate provided by this library:
 
-    mavenTemplate(label: 'mylabel') {
+    gradleTemplate(label: 'mylabel') {
         node('mylabel') {
-            container(name: 'maven') {
+            container(name: 'gradle') {
               ...
             }
         }
     }
 
-or for ease of use you can directly reference the mavenNode:
+or for ease of use you can directly reference the gradleNode:
 
-    mavenNode {
-        container(name: 'maven') {
+    gradleNode {
+        container(name: 'gradle') {
             ...
         }
     }
@@ -464,27 +458,27 @@ The only exception is when you need to mix and match (see [mixing and mathcing](
 
 The provided node / template pairs are the following:
 
-* **maven**     Provides maven capabilities.
+* **gradle**     Provides gradle capabilities.
 * **docker**    Provides access to the docker client and socket.
 * **release**   Mounts release related secrets *(e.g. gpg keys, ssh keys etc)*.
 * **clients**   Provides access to the kubernetes and openshift binaries.
 
-#### Maven Node
+#### Gradle Node
 
-Provides maven capabilities by adding a container with the maven image.
+Provides gradle capabilities by adding a container with the gradle image.
 The container mounts the following volumes:
 
-* Secret `jenkins-maven-settings` Add your maven configuration here.
-* PersistentVolumeClaim `jenkins-mvn-local-repo` The maven local repository to use.
+* Secret `jenkins-gradle-settings` Add your gradle configuration here.
+* PersistentVolumeClaim `jenkins-mvn-local-repo` The gradle local repository to use.
 
-The maven node and template support limited customization through the following properties:
+The gradle node and template support limited customization through the following properties:
 
-* **mavenImage** Select the maven docker image to use.
+* **gradleImage** Select the gradle docker image to use.
 
 Example:
 
-    mavenNode(mavenImage: 'maven:3.3.9-jdk-7') {
-        container(name: 'maven') {
+    gradleNode(gradleImage: 'gradle:3.3.9-jdk-7') {
+        container(name: 'gradle') {
             sh 'mvn clean install'
         }
     }
@@ -498,7 +492,7 @@ The container mounts the following volumes:
 
 Host path mounts are not allowed everywhere, so use with caution.
 Also note that the mount will be mounted to all containers in the pod.
-This means that if we add a maven container to the pod, it will have docker capabilities.
+This means that if we add a gradle container to the pod, it will have docker capabilities.
 
 The docker node and template support limited customization through the following properties:
 
@@ -506,7 +500,7 @@ The docker node and template support limited customization through the following
 
 Example:
 
-    mavenNode(dockerImage: 'docker:1.11.2') {
+    gradleNode(dockerImage: 'docker:1.11.2') {
         container(name: 'docker') {
             sh 'docker build -t myorg/myimage .'
         }
@@ -529,7 +523,7 @@ Example:
 
 Provides docker capabilities by enriching the jenkins slave pod with the proper environment variables and volumes.
 
-* Secret `jenkins-release-gpg` Add your maven configuration here.
+* Secret `jenkins-release-gpg` Add your gradle configuration here.
 
 Also the following environment variables will be available to all containers:
 
@@ -544,7 +538,7 @@ These variables will obtain their values from jenkins container (they will be co
 Example:
 
     releaseTemplate {
-        mavenNode {
+        gradleNode {
         container(name: 'docker') {
             sh 'docker build -t myorg/myimage .'
         }
@@ -553,14 +547,14 @@ Example:
 ### Mixing and matching
 
 There are cases where we might need a more complex setup that may require
-more than a single template. (e.g. a maven container that can run docker builds).
+more than a single template. (e.g. a gradle container that can run docker builds).
 
-For this case you can combine add the docker template and the maven template together:
+For this case you can combine add the docker template and the gradle template together:
 
     dockerTemplate {
-        mavenTemplate(label: 'maven-and-docker') {
-            node('maven-and-docker') {
-                 container(name: 'maven') {
+        gradleTemplate(label: 'gradle-and-docker') {
+            node('gradle-and-docker') {
+                 container(name: 'gradle') {
                     sh 'mvn clean package assemblyline:build assemblyline:push'
                  }            
             }
@@ -570,8 +564,8 @@ For this case you can combine add the docker template and the maven template tog
 The above is equivalent to:
 
     dockerTemplate {
-        mavenNode(label: 'maven-and-docker') {
-            container(name: 'maven') {
+        gradleNode(label: 'gradle-and-docker') {
+            container(name: 'gradle') {
                 sh 'mvn clean package assemblyline:build assemblyline:push'
             }            
         }
@@ -582,8 +576,8 @@ In the example above we can add release capabilities too, by adding the releaseT
 
             dockerTemplate {
                 releaseTemplate {
-                    mavenNode(label: 'maven-and-docker') {
-                        container(name: 'maven') {
+                    gradleNode(label: 'gradle-and-docker') {
+                        container(name: 'gradle') {
                             sh """
                                 mvn release:clean release:prepare
                                 mvn clean release:perform
@@ -610,5 +604,5 @@ Then you can just instantiate the template by creating a node that references th
 
 Note: You can use this template to mix and match too. For example you can combine your custom template with an existing one:
 
-            mavenNode(inheritFrom: 'my-custom-template') {
+            gradleNode(inheritFrom: 'my-custom-template') {
             }
